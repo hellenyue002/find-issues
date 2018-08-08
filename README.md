@@ -1,4 +1,4 @@
-# :calendar: Grace Hopper Celebration - Find Issues :calendar:
+# Grace Hopper Celebration 2018 - Find Issues
 
 This is the TDD in OSS workshop repo for GHC 18.
 
