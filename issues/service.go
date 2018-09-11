@@ -35,15 +35,23 @@ func NewService(repo string, client httpClient) Service {
 	}
 }
 
-func (i Service) Get() ([]Issues, error) {
-	u := &url.URL{
-		Scheme: "https",
-		// TODO: Accept a full path and parse the org/repo from it?
-		// go run main.go github.com/ghc-tdd/spike
-		// api.github.com/repos/ghc-tdd/spike/issues
-		Path: fmt.Sprintf("api.github.com/repos/%s/issues", i.repo),
+func (i Service) Get(labelFilter, usernameFilter string) ([]Issues, error) {
+	rawQuery := ""
+	if labelFilter != "" {
+		rawQuery = fmt.Sprintf("labels=%s", url.QueryEscape(labelFilter))
 	}
 
+	if usernameFilter != "" {
+		rawQuery = fmt.Sprintf("%s&%s", rawQuery, fmt.Sprintf("creator=%s", url.QueryEscape(labelFilter)))
+	}
+
+	u := &url.URL{
+		Scheme:   "https",
+		Path:     fmt.Sprintf("api.github.com/repos/%s/issues", i.repo),
+		RawQuery: rawQuery,
+	}
+
+	fmt.Println(u.String())
 	res, err := i.client.Get(u.String())
 	if err != nil {
 		return []Issues{}, err

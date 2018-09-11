@@ -6,8 +6,8 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/ghc-tdd/spike/issues"
-	"github.com/ghc-tdd/spike/issues/fakes"
+	"github.com/ghc-tdd/find-issues/issues"
+	"github.com/ghc-tdd/find-issues/issues/fakes"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -45,7 +45,7 @@ var _ = Describe("Issues Service", func() {
 		})
 
 		It("returns the list of open issues", func() {
-			issues, err := service.Get()
+			issues, err := service.Get("", "")
 			Expect(err).NotTo(HaveOccurred())
 
 			Expect(client.GetCall.Receives.Url).To(Equal("https://api.github.com/repos/repo-name/issues"))
@@ -56,6 +56,22 @@ var _ = Describe("Issues Service", func() {
 			Expect(issues[1].Labels[0].Name).To(Equal("help-wanted"))
 		})
 
+		Context("when we pass in a label", func() {
+			It("generates the correct rawQuery string", func() {
+				_, err := service.Get("", "help-wanted")
+				Expect(err).NotTo(HaveOccurred())
+				Expect(client.GetCall.Receives.Url).To(Equal("https://api.github.com/repos/repo-name/issues?labels=help-wanted"))
+			})
+		})
+
+		Context("when we pass in a username", func() {
+			It("generates the correct rawQuery string", func() {
+				_, err := service.Get("", "foo")
+				Expect(err).NotTo(HaveOccurred())
+				Expect(client.GetCall.Receives.Url).To(Equal("https://api.github.com/repos/repo-name/issues?creator=foo"))
+			})
+		})
+
 		Describe("error cases", func() {
 			Context("when the client fails to get the issues endpoint", func() {
 				BeforeEach(func() {
@@ -63,7 +79,7 @@ var _ = Describe("Issues Service", func() {
 				})
 
 				It("returns the error", func() {
-					_, err := service.Get()
+					_, err := service.Get("", "")
 
 					Expect(err).To(MatchError("hai"))
 				})
@@ -78,7 +94,7 @@ var _ = Describe("Issues Service", func() {
 				})
 
 				It("returns the error", func() {
-					_, err := service.Get()
+					_, err := service.Get("", "")
 
 					Expect(err).To(MatchError("invalid path https://api.github.com/repos/repo-name/issues"))
 				})
@@ -93,7 +109,7 @@ var _ = Describe("Issues Service", func() {
 				})
 
 				It("returns the error", func() {
-					_, err := service.Get()
+					_, err := service.Get("", "")
 
 					Expect(err).To(MatchError("invalid character '$' looking for beginning of value"))
 				})
