@@ -28,6 +28,15 @@ var _ = Describe("Open Issues", func() {
 			Expect(output).To(ContainSubstring(`#2: User can see only those issues that have the "help wanted" label`))
 		})
 	})
+
+	Context("when filtering by creator", func() {
+		It("returns the list of open issues that were created by that user", func() {
+			url := "ghc-tdd/find-issues"
+			output := execute(url, `--creator`, `chinangela`)
+			Expect(output).NotTo(ContainSubstring("#1: User can get list of open issues on a given repo"))
+			Expect(output).To(ContainSubstring(`#8: Mock Issue for Username Filter Testing`))
+		})
+	})
 })
 
 func execute(args ...string) string {

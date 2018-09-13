@@ -10,7 +10,8 @@ import (
 )
 
 type opts struct {
-	Label string `long:"label" description:"Filter issues based on their labels."`
+	Label   string `long:"label" description:"Filter issues based on their labels."`
+	Creator string `long:"creator" description:"Filter issues based on their creator."`
 }
 
 func main() {
@@ -34,7 +35,7 @@ func main() {
 
 	service := issues.NewService(repo, httpClient)
 
-	issues, err := service.Get(options.Label)
+	issues, err := service.Get(options.Label, options.Creator)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(1)
