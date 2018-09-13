@@ -13,19 +13,28 @@ import (
 
 var _ = Describe("Open Issues", func() {
 	It("returns the list of open issues for a given repository", func() {
-		url := "ghc-tdd/spike"
+		url := "ghc-tdd/find-issues"
 
 		output := execute(url)
 
-		Expect(output).To(ContainSubstring("#1: List the names of the open issues"))
+		Expect(output).To(ContainSubstring("#1: User can get list of open issues on a given repo"))
+	})
+
+	Context("when filtering by help wanted label", func() {
+		It("returns the list of open issues that are tagged with help wanted", func() {
+			url := "ghc-tdd/find-issues"
+			output := execute(url, `--label`, `"help wanted"`)
+			Expect(output).NotTo(ContainSubstring("#1: User can get list of open issues on a given repo"))
+			Expect(output).To(ContainSubstring(`#2: User can see only those issues that have the "help wanted" label`))
+		})
 	})
 })
 
-func execute(url string) string {
+func execute(args ...string) string {
 	stdout := bytes.NewBuffer([]byte{})
 	stderr := bytes.NewBuffer([]byte{})
 
-	cmd := exec.Command(binaryPath, url)
+	cmd := exec.Command(binaryPath, args...)
 
 	session, err := gexec.Start(cmd, stdout, stderr)
 	Expect(err).NotTo(HaveOccurred())
