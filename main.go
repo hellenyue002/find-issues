@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 
@@ -18,14 +19,12 @@ func main() {
 	parser := flags.NewParser(&options, flags.HelpFlag|flags.PrintErrors)
 	remainingArgs, err := parser.ParseArgs(os.Args)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
 
 	var repo string
 	if len(remainingArgs) == 0 {
-		fmt.Fprintf(os.Stderr, "Missing repo. Pass in something like `ghc-tdd/find-issues`!")
-		os.Exit(1)
+		log.Fatal("Missing repo. Pass in something like `ghc-tdd/find-issues`!")
 	}
 
 	repo = remainingArgs[1]
@@ -36,8 +35,7 @@ func main() {
 
 	issues, err := service.Get(options.Label)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
 
 	for _, issue := range issues {
