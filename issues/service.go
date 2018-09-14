@@ -15,8 +15,6 @@ type httpClient interface {
 type Issues struct {
 	Number int
 	Title  string
-	Url    string
-	Labels []Label
 }
 
 type Label struct {

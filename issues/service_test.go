@@ -30,15 +30,11 @@ var _ = Describe("Issues Service", func() {
 				Body: ioutil.NopCloser(bytes.NewBufferString(`[
 					{
 						"number": 121,
-						"title": "Title of Issue 121",
-						"url": "the-url-121",
-						"labels": []
+						"title": "Title of Issue 121"
 					},
 					{
 						"number": 123,
-						"title": "Title of Issue 123",
-						"url": "the-url-123",
-						"labels": [{"name": "help-wanted"}]
+						"title": "Title of Issue 123"
 					}
 				]`)),
 			}
@@ -53,7 +49,6 @@ var _ = Describe("Issues Service", func() {
 			Expect(issues).To(HaveLen(2))
 			Expect(issues[0].Number).To(Equal(121))
 			Expect(issues[1].Number).To(Equal(123))
-			Expect(issues[1].Labels[0].Name).To(Equal("help-wanted"))
 		})
 
 		Context("when we pass in a label", func() {
