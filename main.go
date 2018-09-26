@@ -11,6 +11,7 @@ import (
 )
 
 type opts struct {
+	// Creator string `long:"creator" description:"Filter issues based on their creator."`
 	Label string `long:"label" description:"Filter issues based on their labels."`
 }
 

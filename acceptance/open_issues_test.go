@@ -13,21 +13,34 @@ import (
 
 var _ = Describe("Open Issues", func() {
 	It("returns the list of open issues for a given repository", func() {
-		url := "ghc-tdd/find-issues"
+		repo := "ghc-tdd/find-issues"
 
-		output := execute(url)
+		output := execute(repo)
 
 		Expect(output).To(ContainSubstring("#1: User can get list of open issues on a given repo"))
 	})
 
 	Context("when filtering by help wanted label", func() {
 		It("returns the list of open issues that are tagged with help wanted", func() {
-			url := "ghc-tdd/find-issues"
-			output := execute(url, `--label`, `"help wanted"`)
+			repo := "ghc-tdd/find-issues"
+
+			output := execute(repo, `--label`, `"help wanted"`)
+
 			Expect(output).NotTo(ContainSubstring("#1: User can get list of open issues on a given repo"))
 			Expect(output).To(ContainSubstring(`#2: User can see only those issues that have the "help wanted" label`))
 		})
 	})
+
+	// Context("when filtering by github creator", func() {
+	// 	It("returns the list of open issues that were created by a provided github username", func() {
+	// 		repo := "ghc-tdd/find-issues"
+
+	// 		output := execute(repo, "--creator", "angelachin")
+
+	// 		// TODO: Add expectations here.
+	// 		Expect(output).To(ContainSubstring(""))
+	// 	})
+	// })
 })
 
 func execute(args ...string) string {
