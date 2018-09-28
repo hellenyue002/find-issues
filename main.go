@@ -11,7 +11,7 @@ import (
 )
 
 type opts struct {
-	// Creator string `long:"creator" description:"Filter issues based on their creator."`
+        Creator string `long:"creator" description:"Filter issues based on their creator."`
 	Label string `long:"label" description:"Filter issues based on their labels."`
 }
 
@@ -34,7 +34,7 @@ func main() {
 
 	service := issues.NewService(repo, httpClient)
 
-	issues, err := service.Get(options.Label)
+	issues, err := service.Get(options.Label, options.Creator)
 	if err != nil {
 		log.Fatal(err)
 	}
